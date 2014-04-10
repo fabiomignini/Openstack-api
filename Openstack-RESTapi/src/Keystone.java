@@ -31,6 +31,7 @@ public class Keystone {
 	 * Si autentica a Keystone. Se l'autenticazione è andata
 	 * a buon fine restituisce il Token, se no restituisce null.
 	 * 
+	 * 
 	 */
 	public String authenticateAndGetToken() throws IOException{
 		url = "http://130.192.225.135:35357/v2.0/tokens";
