@@ -26,7 +26,7 @@ public class Neutron {
 	 */
 	public void getNetwors(String token) throws IOException{
 
-		url = "http://130.192.225.135:9696/v2.0/networks";
+		url = "http://controller:9696/v2.0/networks";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -58,7 +58,7 @@ public class Neutron {
 	 * 
 	 */
 	public void getSubnet(String token) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/subnets";
+		url = "http://controller:9696/v2.0/subnets";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -90,7 +90,7 @@ public class Neutron {
 	 * 
 	 */
 	public void getPorts(String token) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/ports";
+		url = "http://controller:9696/v2.0/ports";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -122,7 +122,7 @@ public class Neutron {
 	 * 
 	 */
 	public void getRouters(String token) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/routers";
+		url = "http://controller:9696/v2.0/routers";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -155,7 +155,7 @@ public class Neutron {
 	 * 
 	 */
 	public String createNetwork(String token, String network_name) throws IOException{	
-		url = "http://130.192.225.135:9696/v2.0/networks";
+		url = "http://controller:9696/v2.0/networks";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -195,7 +195,7 @@ public class Neutron {
 		
  
 		JsonObject objjj = rdr.readObject();
-		String network_id = objjj.getJsonObject("network").getJsonString("id").toString();
+		String network_id = objjj.getJsonObject("network").getJsonString("id").getString();
 		
 		return network_id;
 	}
@@ -207,7 +207,7 @@ public class Neutron {
 	 * 
 	 */
 	public String createSubnet(String token, String name, String network_id, String cidr, String gateway_ip) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/subnets";
+		url = "http://controller:9696/v2.0/subnets";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -216,7 +216,7 @@ public class Neutron {
 		con.setRequestProperty("X-Auth-Token", token);
 		con.setRequestProperty("Content-Type", "application/json");
 			
-		String urlParameters = "{\"subnet\":{\"name\":\""+name+"\",\"network_id\":"+network_id+",\"gateway_ip\":\""+gateway_ip+"\",\"ip_version\":4,\"cidr\":\""+cidr+"\"}}";
+		String urlParameters = "{\"subnet\":{\"name\":\""+name+"\",\"network_id\":\""+network_id+"\",\"gateway_ip\":\""+gateway_ip+"\",\"ip_version\":4,\"cidr\":\""+cidr+"\"}}";
 		// Send post request
 		con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -261,7 +261,7 @@ public class Neutron {
 	 * 
 	 */
 	public String createRouter(String token, String name, String external_network_uuid) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/routers";
+		url = "http://controller:9696/v2.0/routers";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -309,7 +309,7 @@ public class Neutron {
 	}
 	
 	public void addInterfare(String token, String router_id, String subnet_id, String gateway_ip_address) throws IOException{
-		url = "http://130.192.225.135:9696/v2.0/routers/"+router_id+"/add_router_interface";
+		url = "http://controller:9696/v2.0/routers/"+router_id+"/add_router_interface";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		

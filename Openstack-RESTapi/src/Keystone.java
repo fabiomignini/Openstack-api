@@ -23,8 +23,12 @@ public class Keystone {
 	private String url;
 	private JsonString token;
 	private JsonString expires;
+	private JsonString tenant_id;
 	
-	public Keystone() throws IOException{	    
+	public Keystone() throws IOException{
+		token = null;
+		expires = null;
+		tenant_id = null;
 	}
 
 	/*
@@ -33,8 +37,8 @@ public class Keystone {
 	 * 
 	 * 
 	 */
-	public String authenticateAndGetToken() throws IOException{
-		url = "http://130.192.225.135:35357/v2.0/tokens";
+	public String authenticateAndGetToken(String username,String password, String tenant_name) throws IOException{
+		url = "http://controller:35357/v2.0/tokens";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -42,7 +46,7 @@ public class Keystone {
 		con.setRequestProperty("Content-Type", "application/json");
 		
 		
-		String urlParameters = "{\"auth\": {\"tenantName\": \"admin\", \"passwordCredentials\": {\"username\": \"admin\", \"password\": \"stack\"}}}";
+		String urlParameters = "{\"auth\": {\"tenantName\": \""+tenant_name+"\", \"passwordCredentials\": {\"username\": \""+username+"\", \"password\": \""+password+"\"}}}";
 
 		// Send post request
 		con.setDoOutput(true);
@@ -74,6 +78,7 @@ public class Keystone {
 		JsonObject objjj = rdr.readObject();
 		token = objjj.getJsonObject("access").getJsonObject("token").getJsonString("id");
 		expires = objjj.getJsonObject("access").getJsonObject("token").getJsonString("expires");
+		tenant_id = objjj.getJsonObject("access").getJsonObject("token").getJsonObject("tenant").getJsonString("id");
 
 		
 		System.out.println("\n\nTest token: "+token.getString()+"\n");
@@ -88,7 +93,7 @@ public class Keystone {
 	 * 
 	 */
 	public List<String> getTenantList(String token) throws IOException{
-		url = "http://130.192.225.135:35357/v2.0/tenants";
+		url = "http://controller:35357/v2.0/tenants";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -138,7 +143,7 @@ public class Keystone {
 	 * 
 	 */
 	public void getVersion(String token) throws IOException{
-		url = "http://130.192.225.135:35357/v3";
+		url = "http://controller:35357/v3";
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		
@@ -162,6 +167,10 @@ public class Keystone {
  
 		//print result
 		System.out.println(response.toString());
+	}
+	
+	public String getTenantId(){
+		return tenant_id.getString();
 	}
 	
 	/*
